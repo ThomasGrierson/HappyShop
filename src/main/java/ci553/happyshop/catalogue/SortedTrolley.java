@@ -104,7 +104,6 @@ public class SortedTrolley {
         // search list for product ID (use Binary Sort).
         // if a matching product ID is found increment ordered quantity by 1.
         // else deep copy product and insert it into list.
-    }
 
     public ArrayList<Product> getProducts() {
         return arrayTrolley;
