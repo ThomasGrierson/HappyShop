@@ -46,6 +46,16 @@ public class Product implements Comparable<Product> {
         this.stockQuantity = stockQuantity;
     }
 
+    // deep copy constructor
+    public Product(Product otherProduct) {
+        proId = otherProduct.getProductId();
+        proDescription = otherProduct.getProductDescription();
+        proImageName = otherProduct.getProductImageName();
+        unitPrice = otherProduct.getUnitPrice();
+        this.orderedQuantity = otherProduct.getOrderedQuantity();
+        this.stockQuantity = otherProduct.getStockQuantity();
+    }
+
     // a set of getter methods
     public String getProductId() { return proId;}
     public String getProductDescription() { return proDescription;}
