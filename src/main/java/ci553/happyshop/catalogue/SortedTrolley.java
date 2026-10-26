@@ -1,7 +1,8 @@
 package ci553.happyshop.catalogue;
 
 import java.util.ArrayList;
-import java.util.Objects;
+
+import static java.lang.IO.println;
 
 public class SortedTrolley {
 
@@ -60,26 +61,25 @@ public class SortedTrolley {
      * }
      */
     public void addProduct(Product product) {
+        println(arrayTrolley);
         if(arrayTrolley.isEmpty()) {
             //private product tempProduct = ;
             arrayTrolley.add(new Product(product));
+            return;
         }
 
         // defines variables for binary sort
         int searchFloor = 0;
-        int searchCeiling = arrayTrolley.size();
+        int searchCeiling = arrayTrolley.size()-1;
         //calculates midpoint of unsearched list
-        int searchTarget = Math.round(searchFloor+((float)(searchCeiling-searchFloor)/2));
+        int searchTarget = (int)(searchFloor+((float)(searchCeiling-searchFloor)/2));
         int compareResult;
-        boolean isSearchComplete = false;
-        while(!isSearchComplete) {
-            // checks if all options have been exhausted. if so add a new product in index position
-            if(searchCeiling == searchFloor) {
-                arrayTrolley.add(searchTarget, new Product(product));
-                isSearchComplete = true;
-            }
+        while(true) {
+            println(""+searchFloor+searchCeiling+searchTarget);
             // compares result I think it just outputs a 0,1, or -1
+            // output is as predicted but larger ID outputs -1 and smaller outputs 1
             compareResult = arrayTrolley.get(searchTarget).compareTo(product);
+            println(compareResult);
             switch (compareResult) {
                 case -1:
                     //target is less than so ceiling gets set to target
@@ -88,15 +88,26 @@ public class SortedTrolley {
                 case 0:
                     //product is found so increments found product by 1
                     arrayTrolley.get(searchTarget).setOrderedQuantity(arrayTrolley.get(searchTarget).getOrderedQuantity()+1);
-                    isSearchComplete = true;
-                    break;
+                    return;
                 case 1:
                     //target is greater than so floor gets set to target
                     searchFloor = searchTarget;
                     break;
             }
+            // checks if all options have been exhausted. if so add a new product in index position
+            if(searchCeiling == searchFloor) {
+                switch (compareResult) {
+                    case -1:
+                        arrayTrolley.add(searchTarget-1, new Product(product));
+                        break;
+                    case 1:
+                        arrayTrolley.add(searchTarget+1, new Product(product));
+                        break;
+                }
+                return;
+            }
             //calculates midpoint of unsearched list
-            searchTarget = Math.round(searchFloor+((float)(searchCeiling-searchFloor)/2));
+            searchTarget = (int)(searchFloor+((float)(searchCeiling-searchFloor)/2));
         }
     }
 
