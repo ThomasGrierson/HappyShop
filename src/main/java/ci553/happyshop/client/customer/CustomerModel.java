@@ -2,6 +2,7 @@ package ci553.happyshop.client.customer;
 
 import ci553.happyshop.catalogue.Order;
 import ci553.happyshop.catalogue.Product;
+import ci553.happyshop.catalogue.SortedTrolley;
 import ci553.happyshop.catalogue.Trolley;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.orderManagement.OrderHub;
@@ -22,7 +23,7 @@ public class CustomerModel {
                                   //Benefits: Flexibility: Easily change the database implementation.
 
     private Product searchResult =null; // product found from search
-    private Trolley trolley =  new Trolley(); // holds the products currently in the customer's trolley
+    private SortedTrolley trolley =  new SortedTrolley(); // holds the products currently in the customer's trolley
 
     // Data passed to CustomerView for UI updates (including search, trolley and receipt page)
     private String searchResultImageName = "imageHolder.jpg";
@@ -191,7 +192,7 @@ public class CustomerModel {
      //File.toURI(): Converts a File object (a file on the filesystem) to a URI object
 
     //for test
-    public Trolley getTrolley() {
+    public SortedTrolley getTrolley() {
         return trolley;
     }
 }
