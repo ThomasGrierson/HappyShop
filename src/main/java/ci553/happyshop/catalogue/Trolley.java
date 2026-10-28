@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Trolley {
 
-    private ArrayList<Product> products = new ArrayList<>();
+    ArrayList<Product> products = new ArrayList<>();
 
     /**
      * Adds a product to the trolley.
