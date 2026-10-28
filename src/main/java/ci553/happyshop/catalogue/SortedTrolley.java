@@ -11,7 +11,6 @@ public class SortedTrolley extends Trolley{
 
     @Override
     public void addProduct(Product product) {
-        println(products);
         if(products.isEmpty()) {
             //private product tempProduct = ;
             products.add(new Product(product));
