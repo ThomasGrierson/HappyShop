@@ -43,7 +43,10 @@ public class CustomerClient extends Application {
         cusModel.cusView = cusView;
         cusView.start(window);
 
-        CustomerAlert customerAlert = new CustomerAlert();
+        CustomerAlert alertSimulator = new CustomerAlert();
+
+        cusModel.alertSimulator = alertSimulator;
+        alertSimulator.warehouseView = cusView;
 
         // Optional feature: Handling Stock Shortages at Checkout.
         // Code is commented out for now; students may explore this as an extension.
