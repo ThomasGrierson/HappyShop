@@ -1,5 +1,6 @@
 package ci553.happyshop.client.customer;
 
+import ci553.happyshop.client.warehouse.AlertSimulator;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.storageAccess.DatabaseRWCreator;
 import javafx.application.Application;
@@ -41,6 +42,8 @@ public class CustomerClient extends Application {
         cusController.cusModel = cusModel;
         cusModel.cusView = cusView;
         cusView.start(window);
+
+        CustomerAlert customerAlert = new CustomerAlert();
 
         // Optional feature: Handling Stock Shortages at Checkout.
         // Code is commented out for now; students may explore this as an extension.

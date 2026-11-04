@@ -59,18 +59,20 @@ import javafx.stage.StageStyle;
  * This design ensures that the alert window is efficient by not recreating the scene multiple times, and the window only exists when necessary.
  */
 
+//maybe abstract AlertSimulator and have a specific implementation for the warehouse and an implementation for customer that extends from the same class
+
 public class AlertSimulator {
     private static int WIDTH = UIStyle.AlertSimulatorWinWidth;
     private static int HEIGHT = UIStyle.AlertSimulatorWinHeight;
 
     public WarehouseView warehouseView;
-    private  Stage window; //window for AlertSimulator
-    private  Scene scene; // Scene for AlertSimulator
+    protected Stage window; //window for AlertSimulator
+    protected Scene scene; // Scene for AlertSimulator
     private  Label laErrorMsg;// Label to display error messages
-    private TextArea taErrorMsg;// Label to display error messages
+    protected TextArea taErrorMsg;// Label to display error messages
 
     // Create the Scene (only once)
-    private  void createScene() {
+    protected void createScene() {
         Label laTitle = new Label("\u26A0 Action cannot be completed"); // for emoji ⚠️
         laTitle.setStyle(UIStyle.alertTitleLabelStyle); //red
 
@@ -98,7 +100,7 @@ public class AlertSimulator {
 
     // Create the window if not exists
     //also recreate a window if the user closed it with error message in it
-    private  void createWindow() {
+    protected  void createWindow() {
         if (scene == null) {
             createScene();  //create scene if not exists
         }
