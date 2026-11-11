@@ -4,6 +4,8 @@ import ci553.happyshop.catalogue.Product;
 import  ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -215,11 +217,20 @@ public class CustomerView  {
         lbProductText.setText(productTextInfo);
         gridTrolley.getChildren().removeAll(gridTrolley.getChildren());
         gridTrolley.addRow(0,laHeaderID,laHeaderName,laHeaderQuantity,laHeaderPrice);
+
         for (Product product : trolleyArray) {
             Label laID = new Label(product.getProductId());
             Label laName = new Label(product.getProductDescription());
-            Spinner<Object> spQuantity =new Spinner<>(0,product.getStockQuantity(),product.getOrderedQuantity());
             Label laPrice = new Label(""+(product.getUnitPrice()*product.getOrderedQuantity()));
+
+            Spinner<Integer> spQuantity =new Spinner<Integer>(0,product.getStockQuantity(),product.getOrderedQuantity());
+            spQuantity.valueProperty().addListener(new ChangeListener<Integer>() {
+                @Override
+                public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                    product.setOrderedQuantity(newValue);
+                }
+            });
+
             gridTrolley.addRow(gridTrolley.getRowCount(),laID,laName,spQuantity,laPrice);
         }
         taTrolley.setText(trolley);
