@@ -30,7 +30,7 @@ public class CustomerAlert extends AlertSimulator {
         //window.setTitle("\uD83C\uDFEC input error message"); // for icon 🏬
         window.setScene(scene);
 
-        //get bounds of warehouse window which trigers the alertSimulator
+        //get bounds of warehouse window which triggers the alertSimulator
         // so that we can put the alertSimulator on top of it and at a suitable position
         WindowBounds bounds = customerView.getWindowBounds();
         window.setX(bounds.x + bounds.width-10);
