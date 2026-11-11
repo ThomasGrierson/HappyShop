@@ -41,9 +41,21 @@ public class CustomerModel {
                  // Textual representation of the generated receipt after checkout,
                 // used for display in the Receipt page
 
+    //Alert box and variable to pass alerts
+    public CustomerAlert alertSimulator;
+    private String alertMsg;
+
     // Dependency Injection via constructor
     public CustomerModel(DatabaseRW databaseRW){
         this.databaseRW = databaseRW;
+    }
+
+    // Tells the view how to update
+    private enum ViewUpdateType {
+        // Alert simulator display (user input error and failure database operation)
+        SHOW_ALERT_MESSAGE,
+        // No alerts everything is fine
+        NORMAL
     }
 
     //SELECT productID, description, image, unitPrice,inStock quantity
@@ -60,35 +72,38 @@ public class CustomerModel {
                 String quantityInfo = stock < 100 ? String.format("\n%d units left.", stock) : "";
                 searchResultProductText = baseInfo + quantityInfo;
                 System.out.println(searchResultProductText);
+                updateView(ViewUpdateType.NORMAL);
             }
             else{
                 searchResult =null;
-                searchResultProductText = "No Product was found with ID " + productId;
+                alertMsg = "No Product was found with ID " + productId;
                 System.out.println("No Product was found with ID " + productId);
+                updateView(ViewUpdateType.SHOW_ALERT_MESSAGE);
             }
         }else{
             searchResult =null;
-            searchResultProductText = "Please type ProductID";
+            alertMsg = "Please type ProductID";
             System.out.println("Please type ProductID.");
+            updateView(ViewUpdateType.SHOW_ALERT_MESSAGE);
         }
-        updateView();
+
     }
 
     void addToTrolley(){
         if(searchResult != null){
             // Add the selected product to the trolley.
             // Currently this simply appends the product to the end of the list.
-            // TODO: Improve the organisation of the trolley (see class Trolley).
             trolley.addProduct(searchResult);
             // Build a formatted string so the trolley contents can be displayed in the UI
             trolleyContentsText = ProductListFormatter.buildString(trolley.getProducts());
+            updateView(ViewUpdateType.NORMAL);
         }
         else{
-            searchResultProductText = "Please search and get an available product before adding to trolley";
+            alertMsg = "Please search and get an available product before adding to trolley";
             System.out.println("must search and get an available product before add to trolley");
+            updateView(ViewUpdateType.SHOW_ALERT_MESSAGE);
         }
         receiptContentsText =""; // Clear receipt to switch back to trolleyPage (receipt shows only when not empty)
-        updateView();
     }
 
     public void checkOut()  {
@@ -116,6 +131,7 @@ public class CustomerModel {
                         ProductListFormatter.buildString(theOrder.getProductList())
                 );
                 System.out.println(receiptContentsText);
+                updateView(ViewUpdateType.NORMAL);
             }
             else{ // Some products have insufficient stock — build an error message to inform the customer
                 StringBuilder errorMsg = new StringBuilder();
@@ -133,15 +149,16 @@ public class CustomerModel {
                 // 2. Trigger a message window to notify the customer about the insufficient stock, rather than directly changing displayLaSearchResult.
                 //You can use the provided RemoveProductNotifier class and its showRemovalMsg method for this purpose.
                 //remember close the message window where appropriate (using method closeNotifierWindow() of RemoveProductNotifier class)
-                searchResultProductText = "Checkout failed due to insufficient stock for the following products:\n" + errorMsg.toString();
+                alertMsg = "Checkout failed due to insufficient stock for the following products:\n" + errorMsg.toString();
                 System.out.println("stock is not enough");
+                updateView(ViewUpdateType.SHOW_ALERT_MESSAGE);
             }
         }
         else{
-            trolleyContentsText = "Your trolley is empty";
+            alertMsg = "Your trolley is empty";
             System.out.println("Your trolley is empty");
+            updateView(ViewUpdateType.SHOW_ALERT_MESSAGE);
         }
-        updateView();
     }
 
     /**
@@ -167,25 +184,32 @@ public class CustomerModel {
     void cancel(){
         trolley.clear();
         trolleyContentsText ="";
-        updateView();
+        updateView(ViewUpdateType.NORMAL);
     }
     void closeReceipt(){
         receiptContentsText ="";
     }
 
-    void updateView() {
-        if(searchResult != null){
-            searchResultImageName = searchResult.getProductImageName();
-            String relativeImageUrl = StorageLocation.imageFolder + searchResultImageName; //relative file path, eg images/0001.jpg
-            // Get the full absolute path to the image
-            Path imageFullPath = Paths.get(relativeImageUrl).toAbsolutePath();
-            searchResultImageName = imageFullPath.toUri().toString(); //get the image full Uri then convert to String
-            System.out.println("Image absolute path: " + imageFullPath); // Debugging to ensure path is correct
+    void updateView(ViewUpdateType updateFor) {
+        switch(updateFor) {
+            case NORMAL:
+                alertSimulator.closeAlertSimulatorWindow();// Close any existing alert window from previous failed operation
+                if (searchResult != null) {
+                    searchResultImageName = searchResult.getProductImageName();
+                    String relativeImageUrl = StorageLocation.imageFolder + searchResultImageName; //relative file path, eg images/0001.jpg
+                    // Get the full absolute path to the image
+                    Path imageFullPath = Paths.get(relativeImageUrl).toAbsolutePath();
+                    searchResultImageName = imageFullPath.toUri().toString(); //get the image full Uri then convert to String
+                    System.out.println("Image absolute path: " + imageFullPath); // Debugging to ensure path is correct
+                } else {
+                    searchResultImageName = "imageHolder.jpg";
+                }
+                cusView.update(searchResultImageName, searchResultProductText, trolleyContentsText, receiptContentsText);
+                break;
+            case SHOW_ALERT_MESSAGE:
+                alertSimulator.showErrorMsg(alertMsg);
+                break;
         }
-        else{
-            searchResultImageName = "imageHolder.jpg";
-        }
-        cusView.update(searchResultImageName, searchResultProductText, trolleyContentsText, receiptContentsText);
     }
      // extra notes:
      //Path.toUri(): Converts a Path object (a file or a directory path) to a URI object.
