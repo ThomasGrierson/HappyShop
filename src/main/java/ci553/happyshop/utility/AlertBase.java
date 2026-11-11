@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 
 public abstract class AlertBase {
 
-    private static int WIDTH = UIStyle.AlertSimulatorWinWidth;
-    private static int HEIGHT = UIStyle.AlertSimulatorWinHeight;
+    protected static int WIDTH = UIStyle.AlertSimulatorWinWidth;
+    protected static int HEIGHT = UIStyle.AlertSimulatorWinHeight;
 
     protected Stage window; //window for AlertSimulator
     protected Scene scene; // Scene for AlertSimulator

@@ -76,8 +76,8 @@ public class WarehouseAlert extends AlertBase {
         //get bounds of warehouse window which trigers the alertSimulator
         // so that we can put the alertSimulator on top of it and at a suitable position
         WindowBounds bounds = warehouseView.getWindowBounds();
-        window.setX(bounds.x + bounds.width-10);
-        window.setY(bounds.y + UIStyle.HistoryWinHeight+30);
+        window.setX(bounds.x + (bounds.width/2 - (double) WIDTH /2));
+        window.setY(bounds.y + (bounds.height/2 - (double) HEIGHT /2));
         window.show();
     }
 }
