@@ -204,7 +204,7 @@ public class CustomerModel {
                 } else {
                     searchResultImageName = "imageHolder.jpg";
                 }
-                cusView.update(searchResultImageName, searchResultProductText, trolleyContentsText, receiptContentsText);
+                cusView.update(searchResultImageName, searchResultProductText, trolley.getProducts(),trolleyContentsText, receiptContentsText);
                 break;
             case SHOW_ALERT_MESSAGE:
                 alertSimulator.showErrorMsg(alertMsg);

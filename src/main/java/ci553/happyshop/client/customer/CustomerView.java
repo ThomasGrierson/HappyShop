@@ -1,6 +1,7 @@
 package ci553.happyshop.client.customer;
 
-import ci553.happyshop.utility.UIStyle;
+import ci553.happyshop.catalogue.Product;
+import  ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
 import javafx.event.ActionEvent;
@@ -14,6 +15,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 /**
  * The CustomerView is separated into two sections by a line :
@@ -42,8 +45,15 @@ public class CustomerView  {
     //four UI controls needs updating when program going on
     private ImageView ivProduct; //image area in searchPage
     private Label lbProductText;//product text info in searchPage
+    private GridPane gridTrolley;
     private TextArea taTrolley; //in trolley Page
     private TextArea taReceipt;//in receipt page
+
+    //trolley headers
+    private final Label laHeaderID =new Label(" ID ");
+    private final Label laHeaderName =new Label(" Name ");
+    private final Label laHeaderQuantity =new Label(" Quantity ");
+    private final Label laHeaderPrice =new Label(" Price ");
 
     // Holds a reference to this CustomerView window for future access and management
     // (e.g., positioning the removeProductNotifier when needed).
@@ -127,6 +137,22 @@ public class CustomerView  {
         Label laPageTitle = new Label("🛒🛒  Trolley 🛒🛒");
         laPageTitle.setStyle(UIStyle.labelTitleStyle);
 
+        gridTrolley = new GridPane();
+        gridTrolley.setHgap(0);
+        gridTrolley.setVgap(4);
+        gridTrolley.setPrefSize((double) WIDTH/2, HEIGHT-50);
+        gridTrolley.setGridLinesVisible(true);
+
+        laHeaderID.setStyle(UIStyle.labelStyle);
+        laHeaderID.setAlignment(Pos.CENTER);
+        laHeaderName.setStyle(UIStyle.labelStyle);
+        laHeaderName.setAlignment(Pos.CENTER);
+        laHeaderQuantity.setStyle(UIStyle.labelStyle);
+        laHeaderQuantity.setAlignment(Pos.CENTER);
+        laHeaderPrice.setStyle(UIStyle.labelStyle);
+        laHeaderPrice.setAlignment(Pos.CENTER);
+        gridTrolley.addRow(0,laHeaderID,laHeaderName,laHeaderQuantity,laHeaderPrice);
+
         taTrolley = new TextArea();
         taTrolley.setEditable(false);
         taTrolley.setPrefSize(WIDTH/2, HEIGHT-50);
@@ -143,7 +169,7 @@ public class CustomerView  {
         hbBtns.setStyle("-fx-padding: 15px;");
         hbBtns.setAlignment(Pos.CENTER);
 
-        vbTrolleyPage = new VBox(15, laPageTitle, taTrolley, hbBtns);
+        vbTrolleyPage = new VBox(15, laPageTitle, gridTrolley, hbBtns);
         vbTrolleyPage.setPrefWidth(COLUMN_WIDTH);
         vbTrolleyPage.setAlignment(Pos.TOP_CENTER);
         vbTrolleyPage.setStyle("-fx-padding: 15px;");
@@ -184,9 +210,18 @@ public class CustomerView  {
     }
 
 
-    public void update(String productImageName, String productTextInfo, String trolley, String receipt) {
+    public void update(String productImageName, String productTextInfo, ArrayList<Product> trolleyArray, String trolley, String receipt) {
         ivProduct.setImage(new Image(productImageName));
         lbProductText.setText(productTextInfo);
+        gridTrolley.getChildren().removeAll(gridTrolley.getChildren());
+        gridTrolley.addRow(0,laHeaderID,laHeaderName,laHeaderQuantity,laHeaderPrice);
+        for (Product product : trolleyArray) {
+            Label laID = new Label(product.getProductId());
+            Label laName = new Label(product.getProductDescription());
+            Spinner<Object> spQuantity =new Spinner<>(0,product.getStockQuantity(),product.getOrderedQuantity());
+            Label laPrice = new Label(""+(product.getUnitPrice()*product.getOrderedQuantity()));
+            gridTrolley.addRow(gridTrolley.getRowCount(),laID,laName,spQuantity,laPrice);
+        }
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
