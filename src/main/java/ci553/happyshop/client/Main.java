@@ -95,6 +95,11 @@ public class Main extends Application {
         cusModel.cusView = cusView;
         cusView.start(new Stage());
 
+        CustomerAlert alertSimulator = new CustomerAlert();
+
+        cusModel.alertSimulator = alertSimulator;
+        alertSimulator.customerView = cusView;
+
         // Optional feature: Handling Stock Shortages at Checkout.
         // Code is commented out for now; students may explore this as an extension.
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
@@ -160,13 +165,13 @@ public class Main extends Application {
 
         //create dependent views that need window info
         HistoryWindow historyWindow = new HistoryWindow();
-        AlertSimulator alertSimulator = new AlertSimulator();
+        WarehouseAlert warehouseAlert = new WarehouseAlert();
 
         // Link after start
         model.successHistoryWindow = historyWindow;
-        model.alertSimulator = alertSimulator;
+        model.warehouseAlert = warehouseAlert;
         historyWindow.warehouseView = view;
-        alertSimulator.warehouseView = view;
+        warehouseAlert.warehouseView = view;
     }
 
     //starts the EmergencyExit GUI, - used to close the entire application immediatelly

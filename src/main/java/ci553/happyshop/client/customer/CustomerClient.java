@@ -1,6 +1,5 @@
 package ci553.happyshop.client.customer;
 
-import ci553.happyshop.client.warehouse.AlertSimulator;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.storageAccess.DatabaseRWCreator;
 import javafx.application.Application;

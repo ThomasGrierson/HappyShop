@@ -1,20 +1,13 @@
 package ci553.happyshop.client.customer;
 
-import ci553.happyshop.client.warehouse.AlertSimulator;
+import ci553.happyshop.utility.AlertBase;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WindowBounds;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class CustomerAlert extends AlertSimulator {
+public class CustomerAlert extends AlertBase {
 
     public CustomerView customerView;
 

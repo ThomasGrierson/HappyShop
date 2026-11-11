@@ -40,12 +40,12 @@ public class WarehouseClient extends Application {
         view.start(window);
 
         HistoryWindow historyWindow = new HistoryWindow();
-        AlertSimulator alertSimulator = new AlertSimulator();
+        WarehouseAlert warehouseAlert = new WarehouseAlert();
 
         // Link after start warehouse interface
         model.successHistoryWindow = historyWindow;
-        model.alertSimulator = alertSimulator;
+        model.warehouseAlert = warehouseAlert;
         historyWindow.warehouseView = view;
-        alertSimulator.warehouseView = view;
+        warehouseAlert.warehouseView = view;
     }
 }

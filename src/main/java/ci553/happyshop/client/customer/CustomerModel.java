@@ -4,8 +4,6 @@ import ci553.happyshop.catalogue.Order;
 import ci553.happyshop.catalogue.Product;
 import ci553.happyshop.catalogue.SortedTrolley;
 import ci553.happyshop.catalogue.Trolley;
-import ci553.happyshop.client.warehouse.AlertSimulator;
-import ci553.happyshop.client.warehouse.WarehouseModel;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.utility.StorageLocation;

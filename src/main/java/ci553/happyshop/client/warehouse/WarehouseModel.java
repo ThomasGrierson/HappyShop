@@ -43,7 +43,7 @@ public class WarehouseModel {
     // An inner class ProductFormInputValidator:
     // Validates and parses product form input (edit and new), storing parsed values and errors.
     // Any user input errors are displayed via alertSimulator.
-    public AlertSimulator alertSimulator;
+    public WarehouseAlert warehouseAlert;
 
     /** alertMsg:
      * Holds the current message to be displayed in the alert simulator.
@@ -313,7 +313,7 @@ public class WarehouseModel {
         switch (updateFor) {
             case ViewUpdateType.DISPLAY_SEARCH_RESULTS:
                 view.updateObservableProductList(searchResults);
-                alertSimulator.closeAlertSimulatorWindow();// Close any existing alert window from previous failed operation
+                warehouseAlert.closeAlertSimulatorWindow();// Close any existing alert window from previous failed operation
                 // If search returns no results, clear the edit panel.
                 // Prevents stale data when a previously selected product
                 // has been deleted by another user.
@@ -331,33 +331,33 @@ public class WarehouseModel {
                         && productPendingDeletion.equals(productBeingEdited)) {
                     view.resetEditChild();
                 }
-                alertSimulator.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
+                warehouseAlert.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
                 break;
 
             case ViewUpdateType.CANCEL_EDIT:
                 view.resetEditChild();
-                alertSimulator.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
+                warehouseAlert.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
                 break;
 
             case ViewUpdateType.PRODUCT_UPDATED:
                 showSuccessHistory(ProductOperationType.PRODUCT_UPDATED);
                 view.resetEditChild();
-                alertSimulator.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
+                warehouseAlert.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
                 break;
 
             case ViewUpdateType.CANCEL_NEW:
                 view.resetNewProChild();
-                alertSimulator.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
+                warehouseAlert.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
                 break;
 
             case ViewUpdateType.PRODUCT_CREATED:
                 showSuccessHistory(ProductOperationType.PRODUCT_CREATED);
                 view.resetNewProChild();
-                alertSimulator.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
+                warehouseAlert.closeAlertSimulatorWindow();//close AlertSimulatorWindow if exists
                 break;
 
             case ViewUpdateType.SHOW_ALERT_MESSAGE:
-                alertSimulator.showErrorMsg(alertMsg);
+                warehouseAlert.showErrorMsg(alertMsg);
         }
     }
 
