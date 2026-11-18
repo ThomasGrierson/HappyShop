@@ -1,8 +1,11 @@
 package ci553.happyshop.client.customer;
 
-import ci553.happyshop.utility.UIStyle;
+import ci553.happyshop.catalogue.Product;
+import  ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,6 +17,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import org.jspecify.annotations.NonNull;
+
+import java.util.ArrayList;
 
 /**
  * The CustomerView is separated into two sections by a line :
@@ -42,8 +48,15 @@ public class CustomerView  {
     //four UI controls needs updating when program going on
     private ImageView ivProduct; //image area in searchPage
     private Label lbProductText;//product text info in searchPage
+    private GridPane gridTrolley;
     private TextArea taTrolley; //in trolley Page
     private TextArea taReceipt;//in receipt page
+
+    //trolley headers
+    private final Label laHeaderID =new Label("ID");
+    private final Label laHeaderName =new Label("Name");
+    private final Label laHeaderQuantity =new Label("Quantity");
+    private final Label laHeaderPrice =new Label("Price");
 
     // Holds a reference to this CustomerView window for future access and management
     // (e.g., positioning the removeProductNotifier when needed).
@@ -127,9 +140,29 @@ public class CustomerView  {
         Label laPageTitle = new Label("🛒🛒  Trolley 🛒🛒");
         laPageTitle.setStyle(UIStyle.labelTitleStyle);
 
+        gridTrolley = new GridPane();
+        gridTrolley.setHgap(2);
+        gridTrolley.setVgap(0);
+        gridTrolley.setPrefSize((double) WIDTH/2, HEIGHT-50);
+        gridTrolley.setAlignment(Pos.TOP_CENTER);
+
+        laHeaderID.setStyle(UIStyle.gridHeaderStyle);
+        laHeaderID.setAlignment(Pos.CENTER);
+        laHeaderID.setPrefWidth(45);
+        laHeaderName.setStyle(UIStyle.gridHeaderStyle);
+        laHeaderName.setAlignment(Pos.CENTER);
+        laHeaderName.setPrefWidth(100);
+        laHeaderQuantity.setStyle(UIStyle.gridHeaderStyle);
+        laHeaderQuantity.setAlignment(Pos.CENTER);
+        laHeaderQuantity.setPrefWidth(70);
+        laHeaderPrice.setStyle(UIStyle.gridHeaderStyle);
+        laHeaderPrice.setAlignment(Pos.CENTER);
+        laHeaderPrice.setPrefWidth(65);
+        gridTrolley.addRow(0,laHeaderID,laHeaderName,laHeaderQuantity,laHeaderPrice);
+
         taTrolley = new TextArea();
         taTrolley.setEditable(false);
-        taTrolley.setPrefSize(WIDTH/2, HEIGHT-50);
+        taTrolley.setPrefSize(WIDTH+10, HEIGHT-50);
 
         Button btnCancel = new Button("Cancel");
         btnCancel.setOnAction(this::buttonClicked);
@@ -143,7 +176,7 @@ public class CustomerView  {
         hbBtns.setStyle("-fx-padding: 15px;");
         hbBtns.setAlignment(Pos.CENTER);
 
-        vbTrolleyPage = new VBox(15, laPageTitle, taTrolley, hbBtns);
+        vbTrolleyPage = new VBox(15, laPageTitle, gridTrolley, hbBtns);
         vbTrolleyPage.setPrefWidth(COLUMN_WIDTH);
         vbTrolleyPage.setAlignment(Pos.TOP_CENTER);
         vbTrolleyPage.setStyle("-fx-padding: 15px;");
@@ -184,14 +217,83 @@ public class CustomerView  {
     }
 
 
-    public void update(String productImageName, String productTextInfo, String trolley, String receipt) {
+    public void update(String productImageName, String productTextInfo, ArrayList<Product> trolleyArray, String receipt) {
         ivProduct.setImage(new Image(productImageName));
         lbProductText.setText(productTextInfo);
-        taTrolley.setText(trolley);
+        gridTrolley.getChildren().removeAll(gridTrolley.getChildren());
+        gridTrolley.addRow(0,laHeaderID,laHeaderName,laHeaderQuantity,laHeaderPrice);
+        int rowcount = 0;
+        double IDWidth = 0;
+        double nameWidth = 0;
+        double priceWidth = 0;
+        for (Product product : trolleyArray) {
+            //style directives aren't applying maybe change to class and make new class everytime a label is needed.
+            rowcount++;
+            Label laID = new Label(product.getProductId());
+            Label laName = new Label(product.getProductDescription());
+            Label laPrice = new Label(getPriceLabel(product));
+
+            Spinner<Integer> spQuantity =new Spinner<Integer>(0,product.getStockQuantity(),product.getOrderedQuantity());
+            spQuantity.valueProperty().addListener(new ChangeListener<Integer>() {
+                @Override
+                public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                    if (newValue == 0){
+                        trolleyArray.remove(product);
+                    } else {
+                        product.setOrderedQuantity(newValue);
+                    }
+                    update(productImageName,productTextInfo,trolleyArray,receipt);
+                }
+            });
+            spQuantity.setPrefWidth(70);
+            spQuantity.setEditable(true);
+            laID.setStyle(UIStyle.gridRowStyle);
+            laID.setPrefWidth(45);
+            laName.setStyle(UIStyle.gridRowStyle);
+            laName.setPrefWidth(100);
+            laPrice.setStyle(UIStyle.gridRowStyle);
+            laPrice.setPrefWidth(65);
+            //sets alternating background colour
+            if (rowcount%2 == 1) {
+                laID.setBackground(UIStyle.gridOddRowBackground);
+                laName.setBackground(UIStyle.gridOddRowBackground);
+                laPrice.setBackground(UIStyle.gridOddRowBackground);
+                spQuantity.setBackground(UIStyle.gridOddRowBackground);
+            }else {
+                laID.setBackground(UIStyle.gridEvenRowBackground);
+                laName.setBackground(UIStyle.gridEvenRowBackground);
+                laPrice.setBackground(UIStyle.gridEvenRowBackground);
+                spQuantity.setBackground(UIStyle.gridEvenRowBackground);
+            }
+            gridTrolley.addRow(gridTrolley.getRowCount(),laID,laName,spQuantity,laPrice);
+        }
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
             taReceipt.setText(receipt);
         }
+    }
+
+    private static String getPriceLabel(Product product) {
+        String price = ""+(product.getUnitPrice()* product.getOrderedQuantity());
+        int count = 0;
+        for (char ch : price.toCharArray()) {
+            if (ch == '.'){
+                /*this is really dumb, but I can't figure out another way to make sure price always has 2
+                numbers after the decimal point*/
+                if (price.length() > count+3){
+                    price=price.substring(0,count+3);
+                } else if (price.length() == count+2) {
+                    price=price+"0";
+                } else if (price.length() == count+1) {
+                    price=price+"00";
+                }
+                break;
+            }
+            else{
+                count++;
+            }
+        }
+        return price;
     }
 
     // Replaces the last child of hbRoot with the specified page.

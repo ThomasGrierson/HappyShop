@@ -1,5 +1,9 @@
 package ci553.happyshop.utility;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Color;
+
 /**
  * UIStyle is a centralized Java final class that holds all JavaFX UI-related style and size constants
  * used across all client views in the system.
@@ -56,6 +60,13 @@ public final class UIStyle {
     public static final int EmergencyExitWinWidth = 200;
     public static final int EmergencyExitWinHeight = 300;
 
+    //Trolley Grid styles
+    public static final String gridHeaderStyle = "-fx-font-weight: bold; -fx-font-size: 14px; " +
+            "-fx-text-fill: black; -fx-background-color: lightblue; ";
+    public static final String gridRowStyle = "-fx-font-weight: normal; -fx-font-size: 14px; " +
+            "-fx-text-fill: black;";
+    public static final Background gridOddRowBackground = new Background(new BackgroundFill(Color.HOTPINK,null,null));
+    public static final Background gridEvenRowBackground = new Background(new BackgroundFill(Color.LIGHTBLUE,null,null));
     //Button styles
     public static final String buttonStyle = "-fx-font-size: 15";
     public static final String greenFillBtnStyle = "-fx-background-color: green; " +
