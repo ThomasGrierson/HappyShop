@@ -94,8 +94,8 @@ public class CustomerModel {
             // Add the selected product to the trolley.
             // Currently this simply appends the product to the end of the list.
             trolley.addProduct(searchResult);
-            // Build a formatted string so the trolley contents can be displayed in the UI
-            trolleyContentsText = ProductListFormatter.buildString(trolley.getProducts());
+            // Build a formatted string so the trolley contents can be displayed in the UI (deprecated)
+            //trolleyContentsText = ProductListFormatter.buildString(trolley.getProducts());
             updateView(ViewUpdateType.NORMAL);
         }
         else{
@@ -204,7 +204,7 @@ public class CustomerModel {
                 } else {
                     searchResultImageName = "imageHolder.jpg";
                 }
-                cusView.update(searchResultImageName, searchResultProductText, trolley.getProducts(),trolleyContentsText, receiptContentsText);
+                cusView.update(searchResultImageName, searchResultProductText, trolley.getProducts(), receiptContentsText);
                 break;
             case SHOW_ALERT_MESSAGE:
                 alertSimulator.showErrorMsg(alertMsg);
